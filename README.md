@@ -1,2 +1,3 @@
-Simple projects that are implement intermidiate programming concepts
+# Simple projects
 
+Simple projects that implement intermediate programming concepts
