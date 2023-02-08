@@ -51,7 +51,7 @@ bool App::OnInit()
 		return false;
 	}
 
-	surface_ = SDL_GetWindowSurface(window_);
+	renderer_ = SDL_CreateRenderer(window_, -1, 0);
 
 	return true;
 }
@@ -64,6 +64,10 @@ void App::OnEvent(const SDL_Event &event)
 }
 
 void App::OnLoop()
+{
+}
+
+void App::OnRender()
 {
 	static SmoothColorCode r;
 	static SmoothColorCode g;
@@ -79,20 +83,18 @@ void App::OnLoop()
 		b++;
 	}
 
-	SDL_FillRect(surface_, NULL,
-		     SDL_MapRGB(surface_->format, r, g, b));
-	SDL_UpdateWindowSurface(window_);
+	SDL_SetRenderDrawColor(renderer_, r, g, b, 255);
+
+	SDL_RenderFillRect(renderer_, NULL);
+
+	SDL_RenderPresent(renderer_);
 
 	counter++;
 }
 
-void App::OnRender()
-{
-}
-
 void App::OnCleanup()
 {
-	SDL_FreeSurface(surface_);
+	SDL_DestroyRenderer(renderer_);
 	SDL_DestroyWindow(window_);
 	SDL_Quit();
 }

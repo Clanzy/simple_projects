@@ -14,7 +14,7 @@ private:
 
 	bool running_;
 
-	SDL_Surface *surface_;
+	SDL_Renderer *renderer_;
 	SDL_Window *window_;
 
 public:
