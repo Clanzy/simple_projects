@@ -4,6 +4,11 @@
 
 #include <chrono>
 
+#ifndef _WIN32
+	#include <unistd.h>
+	#define SDL_Delay(x) usleep(x)
+#endif
+
 App::App()
 {
 	running_ = true;

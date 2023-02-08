@@ -5,12 +5,14 @@
 
 #include <SDL.h>
 
+
+
 class App {
 private:
 	static constexpr std::string_view name_ = "Trippy Screen";
 
 	static constexpr int cps_ = CLOCKS_PER_SEC;
-	static constexpr int fps_ = 90;
+	static constexpr int fps_ = 1000;
 
 	bool running_;
 
