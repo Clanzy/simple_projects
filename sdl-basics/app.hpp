@@ -1,20 +1,20 @@
 #pragma once
 
 #include <string_view>
-#include <ctime>
 
 #include <SDL.h>
 
-
-
 class App {
 private:
-	static constexpr std::string_view name_ = "Trippy Screen";
+	static constexpr std::string_view name_ = "Trippy screen";
 
-	static constexpr int cps_ = CLOCKS_PER_SEC;
-	static constexpr int fps_ = 1000;
+	static constexpr int window_width_ = 800;
+	static constexpr int window_height_ = 600;
 
-	bool running_;
+	static constexpr long long thousand_ms_ = 1000;
+	static constexpr int fps_ = 90;
+
+	bool running_ = true;
 
 	SDL_Renderer *renderer_;
 	SDL_Window *window_;

@@ -3,39 +3,41 @@
 #include "color-code.hpp"
 
 #include <chrono>
-
-#ifndef _WIN32
-	#include <unistd.h>
-	#define SDL_Delay(x) usleep(x)
-#endif
+#include <thread>
 
 App::App()
 {
-	running_ = true;
 }
 
 int App::OnExecute()
 {
-	if (running_ == false) {
+	if (!running_) {
 		return 1;
 	}
 
-	const int clocks_per_frame = cps_ / fps_;
-	int start = 0;
-	int delay_time;
+	using namespace std::chrono;
+	const time_point<system_clock> now = system_clock::now();
+	const auto ms_per_frame = thousand_ms_ / fps_;
+	long long start;
+	long long delay_time;
 
 	SDL_Event event;
 	while (running_) {
-		start = SDL_GetTicks();
+		start = duration_cast<milliseconds>(now.time_since_epoch())
+				.count();
 		while (SDL_PollEvent(&event) == 1) {
 			OnEvent(event);
 		}
 		OnLoop();
 		OnRender();
 
-		delay_time = clocks_per_frame - (SDL_GetTicks() - start);
+		delay_time =
+			ms_per_frame -
+			(duration_cast<milliseconds>(now.time_since_epoch())
+				 .count() -
+			 start);
 		if (delay_time > 0) {
-			SDL_Delay(delay_time);
+			std::this_thread::sleep_for(milliseconds(delay_time));
 		}
 	}
 	OnCleanup();
@@ -50,7 +52,8 @@ bool App::OnInit()
 	}
 
 	window_ = SDL_CreateWindow(name_.data(), SDL_WINDOWPOS_CENTERED,
-				   SDL_WINDOWPOS_CENTERED, 800, 600, 0);
+				   SDL_WINDOWPOS_CENTERED, window_width_,
+				   window_height_, 0);
 
 	if (window_ == nullptr) {
 		return false;
@@ -88,7 +91,8 @@ void App::OnRender()
 		b++;
 	}
 
-	SDL_SetRenderDrawColor(renderer_, r, g, b, 255);
+	constexpr int max_alpha = 0xFF;
+	SDL_SetRenderDrawColor(renderer_, r, g, b, max_alpha);
 
 	SDL_RenderFillRect(renderer_, NULL);
 
